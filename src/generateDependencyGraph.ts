@@ -34,7 +34,7 @@ export async function generateDependencyGraph({
     prevHash?: string,
   ) => Promise<string>;
   existingDependencies?: z.infer<typeof DependencyGraphType>;
-  cachedExtensionsMap: ExtensionNodeMap
+  cachedExtensionsMap?: ExtensionNodeMap
 }) {
   const deps = await computeCustomNodesMap({
     workflow_api,
