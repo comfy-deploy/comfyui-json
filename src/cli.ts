@@ -85,12 +85,12 @@ const handleFileUpload = async (
   return _path;
 };
 
-const deps = await generateDependencyGraph(
+const deps = await generateDependencyGraph({
   workflow_api,
   snapshot,
   computeFileHash,
   handleFileUpload,
-);
+});
 
 await $`echo ${JSON.stringify(deps, null, 2)} > ${file("output.json")}`;
 

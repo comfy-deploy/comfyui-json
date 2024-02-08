@@ -1,5 +1,4 @@
 import { z } from "zod";
-// import { $, file } from "bun";
 
 import {
   workflowAPIType,
@@ -7,7 +6,7 @@ import {
   type CustomNodesDeps,
 } from "./workflowAPIType";
 import { getBranchInfo } from "./getBranchInfo";
-type ExtensionNodeMap = Record<
+export type ExtensionNodeMap = Record<
   string,
   [
     string[],

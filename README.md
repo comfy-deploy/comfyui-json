@@ -9,12 +9,12 @@ bun i comfyui-json
 API
 
 ```ts
-const deps = await generateDependencyGraph(
+const deps = await generateDependencyGraph({
   workflow_api, // required, workflow API form ComfyUI
   snapshot, // optional, snapshot generated form ComfyUI Manager
   computeFileHash, // optional, any function that returns a file hash
   handleFileUpload, // optional, any custom file upload handler, for external files right now
-);
+});
 ```
 
 Example output
