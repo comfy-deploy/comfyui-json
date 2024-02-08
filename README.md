@@ -1,15 +1,20 @@
 # comfyui-json
 
-To install dependencies:
+Install npm
 
-```bash
-bun install
+```
+bun i comfyui-json
 ```
 
-To test locally run:
+API
 
-```bash
-bun run src/cli.ts -i "./workflow_api.json" -c "path/to/your/ComfyUI"
+```ts
+const deps = await generateDependencyGraph(
+  workflow_api, // required, workflow API form ComfyUI
+  snapshot, // optional, snapshot generated form ComfyUI Manager
+  computeFileHash, // optional, any function that returns a file hash
+  handleFileUpload, // optional, any custom file upload handler, for external files right now
+);
 ```
 
 Example output
@@ -43,4 +48,54 @@ Example output
     ]
   }
 }
+```
+
+Example file upload handler
+
+```ts
+const handleFileUpload = async (
+  _path: string,
+  hash: string,
+  prevHash?: string,
+) => {
+  console.log(
+    `Uploading file ${_path} with hash ${hash} and previous hash ${prevHash}`,
+  );
+
+  return _path;
+};
+```
+
+Example bun file hasher
+
+```ts
+const computeFileHash = async (_path: string) => {
+  const comfyuiPath = values.comfyui_path;
+  if (!comfyuiPath) {
+    return;
+  }
+
+  const f = file(path.join(comfyuiPath, _path));
+  const exist = await f.exists();
+  if (exist) {
+    const a = await f.arrayBuffer();
+    const hasher = new Bun.CryptoHasher("sha256");
+    hasher.update(a);
+    const hash = hasher.digest("base64");
+
+    return hash;
+  }
+};
+```
+
+To install dependencies:
+
+```bash
+bun install
+```
+
+To test locally run:
+
+```bash
+bun run src/cli.ts -i "./workflow_api.json" -c "path/to/your/ComfyUI"
 ```
