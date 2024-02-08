@@ -12,6 +12,7 @@ import { FileReferencesType } from "./workflowAPIType";
 
 export const DependencyGraphType = z.object({
   comfyui: z.string(),
+  missing_nodes: z.array(z.string()),
   custom_nodes: CustomNodesDepsType,
   models: FileReferencesType,
   files: FileReferencesType,
@@ -24,6 +25,7 @@ export async function generateDependencyGraph({
   handleFileUpload,
   existingDependencies,
   cachedExtensionsMap,
+  pullLatestHashIfMissing = true
 }: {
   workflow_api: WorkflowAPIType;
   snapshot: SnapshotType;
@@ -34,11 +36,15 @@ export async function generateDependencyGraph({
     prevHash?: string,
   ) => Promise<string>;
   existingDependencies?: z.infer<typeof DependencyGraphType>;
-  cachedExtensionsMap?: ExtensionNodeMap
+  cachedExtensionsMap?: ExtensionNodeMap,
+  pullLatestHashIfMissing?: boolean;
 }) {
-  const deps = await computeCustomNodesMap({
+  const {
+    customNodes: deps, missingNodes
+  } = await computeCustomNodesMap({
     workflow_api,
     snapshot,
+    pullLatestHashIfMissing,
     extensionNodeMap: cachedExtensionsMap
   });
   const comfyuihash = deps["https://github.com/comfyanonymous/ComfyUI"].hash;
@@ -47,6 +53,7 @@ export async function generateDependencyGraph({
   return {
     comfyui: comfyuihash,
     custom_nodes: deps,
+    missing_nodes: missingNodes,
     models: await computeCustomModelsMap({
       workflow_api,
       getFileHash: computeFileHash,

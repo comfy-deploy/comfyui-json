@@ -6,6 +6,7 @@ import {
   type CustomNodesDeps,
 } from "./workflowAPIType";
 import { getBranchInfo } from "./getBranchInfo";
+
 export type ExtensionNodeMap = Record<
   string,
   [
@@ -35,11 +36,13 @@ export async function computeCustomNodesMap({
   snapshot,
   includeNodes,
   extensionNodeMap,
+  pullLatestHashIfMissing = true
 }: {
   workflow_api: WorkflowAPIType;
   snapshot?: SnapshotType;
   includeNodes?: boolean;
   extensionNodeMap?: ExtensionNodeMap;
+  pullLatestHashIfMissing?: boolean;
 }) {
   const data = (
     extensionNodeMap
@@ -65,6 +68,8 @@ export async function computeCustomNodesMap({
   //   await $`echo ${JSON.stringify(data, null, 2)} > ${cacheFilePath}`;
   // }
 
+  const missingNodes: Set<string> = new Set();
+
   const crossCheckedApi = Object.entries(workflow_api)
     .map(([_, value]) => {
       const classType = value.class_type;
@@ -73,6 +78,10 @@ export async function computeCustomNodesMap({
             nodeArray[0].includes(classType),
           )
         : undefined;
+
+      if (!classTypeData && value.class_type) {
+        missingNodes.add(value.class_type);
+      }
       return classTypeData ? { node: value, classTypeData } : null;
     })
     .filter((item) => item !== null);
@@ -95,7 +104,7 @@ export async function computeCustomNodesMap({
           customNodeHash = snapshot?.comfyui;
         }
 
-        if (!customNodeHash) {
+        if (!customNodeHash && pullLatestHashIfMissing) {
           if (classTypeData[0].endsWith(".git")) {
             url = classTypeData[0].split("/").pop()?.split(".")[0];
             if (url) customNodeHash = snapshot?.git_custom_nodes[url]?.hash;
@@ -140,5 +149,10 @@ export async function computeCustomNodesMap({
     Promise.resolve({} as CustomNodesDeps),
   );
 
-  return groupedByAuxName;
+  console.log("Missing nodes", missingNodes);
+
+  return {
+    customNodes: await groupedByAuxName,
+    missingNodes: Array.from(missingNodes),
+  };
 }
