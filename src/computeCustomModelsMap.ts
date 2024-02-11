@@ -34,6 +34,14 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
         },
       ],
     },
+    LoraLoader: {
+      inputs: [
+        {
+          name: "lora_name",
+          type: "loras",
+        },
+      ],
+    },
   };
 
   return computeFileMap({
