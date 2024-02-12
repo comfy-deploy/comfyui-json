@@ -44,6 +44,8 @@ export const CustomNodesDepsType = z.record(
     node: z.array(workflowAPINodeType).optional(),
     hash: z.string().optional(),
     url: z.string(),
+    files: z.array(z.string()).optional(),
+    install_type: z.union([z.enum(["copy", "unzip", "git-clone"]), z.string()]).optional(), 
     warning: z.string().optional(),
     pip: z.array(z.string()).optional(),
   }),

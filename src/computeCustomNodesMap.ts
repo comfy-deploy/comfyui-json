@@ -148,6 +148,10 @@ export async function computeCustomNodesMap({
         if (custom_node_details && custom_node_details.pip) {
           acc[classTypeData[0]].pip = custom_node_details.pip;
         }
+        if (custom_node_details) {
+          acc[classTypeData[0]].files = custom_node_details.files
+          acc[classTypeData[0]].install_type = custom_node_details.install_type
+        }
       }
       if (includeNodes) acc[classTypeData[0]].node?.push(node);
       return acc;
