@@ -28,7 +28,7 @@ export async function generateDependencyGraph({
   pullLatestHashIfMissing = true
 }: {
   workflow_api: WorkflowAPIType;
-  snapshot: SnapshotType;
+  snapshot?: SnapshotType;
   computeFileHash?: (path: string) => Promise<string | undefined>;
   handleFileUpload?: (
     path: string,
@@ -47,7 +47,7 @@ export async function generateDependencyGraph({
     pullLatestHashIfMissing,
     extensionNodeMap: cachedExtensionsMap
   });
-  const comfyuihash = deps["https://github.com/comfyanonymous/ComfyUI"].hash;
+  const comfyuihash = deps["https://github.com/comfyanonymous/ComfyUI"]?.hash ?? snapshot?.comfyui;
   delete deps["https://github.com/comfyanonymous/ComfyUI"];
 
   return {
