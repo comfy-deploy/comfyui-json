@@ -12,7 +12,9 @@ export type ExtensionNodeMap = Record<
   [
     string[],
     {
+      title: string;
       title_aux: string;
+      nodename_pattern: string;
     },
   ]
 >;
@@ -25,6 +27,7 @@ type CustomNodeList = {
     files: string[];
     install_type: string;
     description: string;
+    nodename_pattern: string;
   }[];
 };
 
@@ -36,7 +39,7 @@ export async function computeCustomNodesMap({
   snapshot,
   includeNodes,
   extensionNodeMap,
-  pullLatestHashIfMissing = true
+  pullLatestHashIfMissing = true,
 }: {
   workflow_api: WorkflowAPIType;
   snapshot?: SnapshotType;
@@ -74,8 +77,11 @@ export async function computeCustomNodesMap({
     .map(([_, value]) => {
       const classType = value.class_type;
       const classTypeData = classType
-        ? Object.entries(data).find(([_, nodeArray]) =>
-            nodeArray[0].includes(classType),
+        ? Object.entries(data).find(
+            ([_, nodeArray]) =>
+              nodeArray[0].includes(classType) ||
+              (nodeArray[1].nodename_pattern &&
+                new RegExp(nodeArray[1].nodename_pattern).test(classType)),
           )
         : undefined;
 
