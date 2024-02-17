@@ -55,7 +55,7 @@ export async function computeFileMap({
 
           // Match if there are existing files
           if (hash) {
-            const existingFile = existingFiles?.[inputKey.type].find(
+            const existingFile = existingFiles?.[inputKey.type]?.find(
               (file) => file.name === value.inputs[inputKey.name],
             );
 
