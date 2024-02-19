@@ -65,7 +65,99 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
           type: "clip",
         },
       ],
-    }
+    },
+    DualCLIPLoader: {
+      inputs: [
+        {
+          name: "clip_name1",
+          type: "clip",
+        },
+        {
+          name: "clip_name2",
+          type: "clip",
+        },
+      ],
+    },
+    unCLIPCheckpointLoader: {
+      inputs: [
+        {
+          name: "ckpt_name",
+          type: "checkpoints",
+        },
+      ],
+    },
+    ControlNetLoader: {
+      inputs: [
+        {
+          name: "controlnet_name",
+          type: "controlnet",
+        },
+      ],
+    },
+    DiffControlNetLoader: {
+      inputs: [
+        {
+          name: "controlnet_name",
+          type: "controlnet",
+        },
+      ],
+    },
+    StyleModelLoader: {
+      inputs: [
+        {
+          name: "style_model_name",
+          type: "style_models",
+        },
+      ],
+    },
+    GLIGENLoader: {
+      inputs: [
+        {
+          name: "gligen_name",
+          type: "gligen",
+        },
+      ],
+    },
+    DiffusersLoader: {
+      inputs: [
+        {
+          name: "model_path",
+          type: "diffusers",
+        },
+      ],
+    },
+    LoraLoaderModelOnly: {
+      inputs: [
+        {
+          name: "lora_name",
+          type: "loras",
+        },
+      ],
+    },
+    HypernetworkLoader: {
+      inputs: [
+        {
+          name: "hypernetwork_name",
+          type: "hypernetworks",
+        },
+      ],
+    },
+    PhotoMakerLoader: {
+      inputs: [
+        {
+          name: "photomaker_model_name",
+          type: "photomaker",
+        },
+      ],
+    },
+    ImageOnlyCheckpointLoader: {
+      inputs: [
+        {
+          name: "ckpt_name",
+          type: "checkpoints",
+        },
+      ],
+    },
   };
 
   return computeFileMap({
