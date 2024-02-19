@@ -42,6 +42,30 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
         },
       ],
     },
+    VAELoader: {
+      inputs: [
+        {
+          name: "vae_name",
+          type: "vae",
+        },
+      ],
+    },
+    UNETLoader: {
+      inputs: [
+        {
+          name: "unet_name",
+          type: "unet",
+        },
+      ],
+    },
+    CLIPLoader: {
+      inputs: [
+        {
+          name: "clip_name",
+          type: "clip",
+        },
+      ],
+    }
   };
 
   return computeFileMap({
