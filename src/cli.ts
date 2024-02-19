@@ -92,6 +92,14 @@ const deps = await generateDependencyGraph({
   handleFileUpload,
 });
 
-await $`echo ${JSON.stringify(deps, null, 2)} > ${file("output.json")}`;
+const outputFilePath = path.join(
+  path.dirname(values.workflow_api_path!),
+  path.basename(
+    values.workflow_api_path!,
+    path.extname(values.workflow_api_path!),
+  ) + "-dependencies.json",
+);
 
-console.log("Saved to output.json");
+await $`echo ${JSON.stringify(deps, null, 2)} > ${file(outputFilePath)}`;
+
+console.log(`Saved to ${outputFilePath}`);
