@@ -51,11 +51,19 @@ export async function computeCustomNodesMap({
     extensionNodeMap
       ? extensionNodeMap
       : await (
-          await fetch(
-            "https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json",
-          )
-        ).json()
+        await fetch(
+          "https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json",
+        )
+      ).json()
   ) as ExtensionNodeMap;
+
+  // Black list nodes that are having too much conflicts
+  const blacklistedUrls = ["https://github.com/Seedsa/Fooocus_Nodes"];
+  Object.entries(data).forEach(([key, value]) => {
+    if (blacklistedUrls.includes(key)) {
+      delete data[key];
+    }
+  });
 
   const custom_nodes = (await (
     await fetch(
@@ -76,14 +84,27 @@ export async function computeCustomNodesMap({
   const crossCheckedApi = Object.entries(workflow_api)
     .map(([_, value]) => {
       const classType = value.class_type;
-      const classTypeData = classType
-        ? Object.entries(data).find(
-            ([_, nodeArray]) =>
-              nodeArray[0].includes(classType) ||
-              (nodeArray[1].nodename_pattern &&
-                new RegExp(nodeArray[1].nodename_pattern).test(classType)),
-          )
-        : undefined;
+      // Collect all matches for the classType
+      const classTypeMatches = classType
+        ? Object.entries(data).filter(
+          ([_, nodeArray]) =>
+            nodeArray[0].includes(classType) ||
+            (nodeArray[1].nodename_pattern &&
+              new RegExp(nodeArray[1].nodename_pattern).test(classType)),
+        )
+        : [];
+
+      // Detect conflict: more than one match found
+      if (classTypeMatches.length > 1) {
+        console.warn(`Conflict detected for classType '${classType}' in node pack '${classTypeMatches.reduce(
+          (acc, curr, index, array) => acc + curr[1][1].title_aux + (index < array.length - 1 ? ", " : ""),
+          ""
+        )}': multiple matches found.`);
+        // Handle the conflict, e.g., by choosing the first match, logging a warning, etc.
+        // This example simply chooses the first match
+      }
+
+      const classTypeData = classTypeMatches.length == 1 ? classTypeMatches[0] : undefined;
 
       if (!classTypeData && value.class_type) {
         missingNodes.add(value.class_type);
