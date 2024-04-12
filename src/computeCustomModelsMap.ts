@@ -158,6 +158,36 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
         },
       ],
     },
+
+
+    ControlNetLoaderAdvanced: {
+      inputs: [
+        {
+          name: "controlnet_name",
+          type: "controlnet",
+        },
+      ],
+    },
+    ACN_SparseCtrlLoaderAdvanced: {
+      inputs: [
+        {
+          name: "sparsectrl_name",
+          type: "controlnet",
+        },
+      ],
+    },
+    ACN_SparseCtrlMergedLoaderAdvanced: {
+      inputs: [
+        {
+          name: "sparsectrl_name",
+          type: "controlnet",
+        },
+        {
+          name: "control_net_name",
+          type: "controlnet",
+        },
+      ],
+    },
   };
 
   return computeFileMap({
