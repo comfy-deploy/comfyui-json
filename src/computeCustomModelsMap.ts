@@ -188,6 +188,15 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
         },
       ],
     },
+
+    UpscaleModelLoader: {
+      inputs: [
+        {
+          name: "model_name",
+          type: "upscale_models",
+        },
+      ],
+    },
   };
 
   return computeFileMap({
