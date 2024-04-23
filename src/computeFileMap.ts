@@ -47,6 +47,9 @@ export async function computeFileMap({
       const classType = value.class_type;
       if (classType && map[classType]) {
         const a = map[classType].inputs.map(async (inputKey) => {
+          // If this is a external input, it will be array
+          if (Array.isArray(value.inputs[inputKey.name]) || value.inputs[inputKey.name] === undefined) return null;
+
           const file_path = `${folder}${
             includeTypeInPath ? `/${inputKey.type}` : ""
           }/${value.inputs[inputKey.name]}`;
