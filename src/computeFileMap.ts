@@ -47,12 +47,15 @@ export async function computeFileMap({
       const classType = value.class_type;
       if (classType && map[classType]) {
         const a = map[classType].inputs.map(async (inputKey) => {
+          console.log("map", map[classType].inputs)
           // If this is a external input, it will be array
+          console.log("inputkey.name: ", inputKey.name)
           if (Array.isArray(value.inputs[inputKey.name]) || value.inputs[inputKey.name] === undefined) return null;
 
           const file_path = `${folder}${
             includeTypeInPath ? `/${inputKey.type}` : ""
           }/${value.inputs[inputKey.name]}`;
+          console.log('file_path', file_path)
           const hash: string | undefined = await getFileHash?.(file_path);
           let url: string | undefined = undefined;
 
@@ -81,6 +84,8 @@ export async function computeFileMap({
             }
           }
 
+          console.log(value.inputs[inputKey.name])
+
           return value.inputs[inputKey.name]
             ? ({
                 value: value.inputs[inputKey.name],
@@ -90,6 +95,7 @@ export async function computeFileMap({
               } satisfies FileReference)
             : null;
         });
+        console.log(await Promise.all(a))
         return (await Promise.all(a)).filter(
           (inputValue): inputValue is FileReference => inputValue !== null,
         );

@@ -2,6 +2,7 @@ import {
   DependencyGraphType,
   generateDependencyGraph,
 } from "./generateDependencyGraph";
+import { graphToPrompt } from "./graphToPrompt";
 import { CustomNodesDepsType, FileReferenceType } from "./workflowAPIType";
 
 export {
@@ -9,4 +10,5 @@ export {
   CustomNodesDepsType,
   FileReferenceType,
   DependencyGraphType,
+  graphToPrompt,
 };

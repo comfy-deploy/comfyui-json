@@ -197,6 +197,15 @@ export async function computeCustomModelsMap(props: ComputeFileMapProps) {
         },
       ],
     },
+
+    ADE_LoadAnimateDiffModel: {
+      inputs: [
+        {
+          name: "model_name",
+          type: "animate_diff_model",
+        },
+      ],
+    },
   };
 
   return computeFileMap({

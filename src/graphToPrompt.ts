@@ -57,6 +57,10 @@ export async function graphToPrompt(graph: LGraph) {
         }
       }
 
+      console.log('node: ', node)
+      // console.log('widgets: ', widgets)
+      // console.log("inputs after widgets: ", inputs)
+
       // Store all node links
       for (const i in node.inputs) {
         let parent = node.getInputNode(i);
