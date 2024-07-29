@@ -94,7 +94,7 @@ export async function generateDependencyGraphJson({
   pullLatestHashIfMissing?: boolean;
 }) {
   const {
-    customNodes: deps, missingNodes
+    customNodes: deps, missingNodes, conflictNodes
   } = await computeCustomNodesMapJson({
     workflow_json,
     snapshot,
@@ -108,20 +108,17 @@ export async function generateDependencyGraphJson({
     comfyui: comfyuihash,
     custom_nodes: deps,
     missing_nodes: missingNodes,
-    // TODO: 
-    models: await computeCustomModelsMap({
-      workflow_json,
-      getFileHash: computeFileHash,
-      // Skipping upload for models
-      // handleFileUpload,
-      // existingFiles: existingDependencies?.models,
-    }),
-    // TODO: 
-    files: await computeExternalFilesMap({
-      workflow_json,
-      getFileHash: computeFileHash,
-      handleFileUpload,
-      existingFiles: existingDependencies?.files,
-    }),
+    conflicting_nodes: conflictNodes,
+    // TODO:  compute the rest
+    // models: await computeCustomModelsMap({
+    //   workflow_json,
+    //   getFileHash: computeFileHash,
+    // }),
+    // files: await computeExternalFilesMap({
+    //   workflow_json,
+    //   getFileHash: computeFileHash,
+    //   handleFileUpload,
+    //   existingFiles: existingDependencies?.files,
+    // }),
   };
 }

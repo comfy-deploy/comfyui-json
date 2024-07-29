@@ -36,11 +36,11 @@ export type WorkflowAPIType = z.infer<typeof workflowAPIType>;
 export type SnapshotType = z.infer<typeof snapshotType>;
 
 async function fetchExtensionNodeMap() {
-  return (await (
+  return await (
     await fetch(
       "https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json"
     )
-  ).json()) as ExtensionNodeMap;
+  ).json() as ExtensionNodeMap;
 }
 
 // Black list nodes that are having too much conflicts
@@ -52,14 +52,14 @@ const filterBlacklistedUrls = (data: ExtensionNodeMap) => {
     }
   });
   return data;
-};
+}
 
 async function getCustomNodesMap() {
-  return (await (
+  return await (
     await fetch(
       "https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json"
     )
-  ).json()) as CustomNodeList;
+  ).json() as CustomNodeList;
   console.log("Getting extension-node-map.json");
 }
 
@@ -78,7 +78,9 @@ export async function computeCustomNodesMap({
   pullLatestHashIfMissing?: boolean;
 }) {
   let data = (
-    extensionNodeMap ? extensionNodeMap : await fetchExtensionNodeMap()
+    extensionNodeMap
+      ? extensionNodeMap
+      : await fetchExtensionNodeMap() 
   ) as ExtensionNodeMap;
   data = filterBlacklistedUrls(data);
   const custom_nodes = await getCustomNodesMap();
@@ -208,7 +210,9 @@ export async function computeCustomNodesMapJson({
   pullLatestHashIfMissing?: boolean;
 }) {
   let data = (
-    extensionNodeMap ? extensionNodeMap : await fetchExtensionNodeMap()
+    extensionNodeMap
+      ? extensionNodeMap
+      : await fetchExtensionNodeMap() 
   ) as ExtensionNodeMap;
   data = filterBlacklistedUrls(data);
   const custom_nodes = await getCustomNodesMap();
@@ -235,12 +239,13 @@ export async function computeCustomNodesMapJson({
           `Conflict detected for classType '${classType}' in node pack '${classTypeMatches.reduce(
             (acc, curr, index, array) =>
               acc +
-              curr[1][1].title_aux +
+              curr[1][1].title_aux + 
               (index < array.length - 1 ? ", " : ""),
             ""
           )}': multiple matches found.`
         );
       }
+
 
       const classTypeData =
         classTypeMatches.length == 1 ? classTypeMatches[0] : undefined;
@@ -313,12 +318,11 @@ export async function computeCustomNodesMapJson({
         acc[classTypeData[0]].install_type = custom_node_details.install_type;
       }
     }
-    if (includeNodes)
-      acc[classTypeData[0]].node?.push({
-        class_type: node.type,
-        inputs: {},
-      });
-    return acc;
+    if (includeNodes) acc[classTypeData[0]].node?.push({
+      class_type: node.type,
+      inputs: {}
+    });
+      return acc;
   }, Promise.resolve({} as CustomNodesDeps));
 
   console.log("Missing nodes", missingNodes);
