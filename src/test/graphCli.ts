@@ -1,6 +1,6 @@
 import { graphToPrompt } from "../graphToPrompt";
 import { LGraph } from "litegraph.js";
-import x from "../workflow.json";
+import x from "./workflow.json";
 
 const y = new LGraph(x)
 

@@ -108,6 +108,7 @@ export async function generateDependencyGraphJson({
     comfyui: comfyuihash,
     custom_nodes: deps,
     missing_nodes: missingNodes,
+    // TODO: 
     models: await computeCustomModelsMap({
       workflow_json,
       getFileHash: computeFileHash,
@@ -115,6 +116,7 @@ export async function generateDependencyGraphJson({
       // handleFileUpload,
       // existingFiles: existingDependencies?.models,
     }),
+    // TODO: 
     files: await computeExternalFilesMap({
       workflow_json,
       getFileHash: computeFileHash,

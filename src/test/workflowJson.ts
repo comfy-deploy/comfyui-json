@@ -1,5 +1,5 @@
-import workflow_json  from "../workflow.json";
-import workflow_api from "../api.json"
+import workflow_json  from "./workflow.json";
+import workflow_api from "./api.json"
 import { computeCustomNodesMapJson, computeCustomNodesMap } from "../computeCustomNodesMap";
 
 // computeCustomNodesMap ({ workflow_api }).then((deps) => {
