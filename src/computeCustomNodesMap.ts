@@ -80,7 +80,7 @@ export async function computeCustomNodesMap({
   let data = (
     extensionNodeMap
       ? extensionNodeMap
-      : await fetchExtensionNodeMap() 
+      : await fetchExtensionNodeMap()
   ) as ExtensionNodeMap;
   data = filterBlacklistedUrls(data);
   const custom_nodes = await getCustomNodesMap();
@@ -92,11 +92,11 @@ export async function computeCustomNodesMap({
       // Collect all matches for the classType
       const classTypeMatches = classType
         ? Object.entries(data).filter(
-            ([url, nodeArray]) =>
-              nodeArray[0].includes(classType) ||
-              (nodeArray[1].nodename_pattern &&
-                new RegExp(nodeArray[1].nodename_pattern).test(classType))
-          )
+          ([url, nodeArray]) =>
+            nodeArray[0].includes(classType) ||
+            (nodeArray[1].nodename_pattern &&
+              new RegExp(nodeArray[1].nodename_pattern).test(classType))
+        )
         : [];
 
       // Detect conflict: more than one match found
@@ -212,12 +212,12 @@ export async function computeCustomNodesMapJson({
   let data = (
     extensionNodeMap
       ? extensionNodeMap
-      : await fetchExtensionNodeMap() 
+      : await fetchExtensionNodeMap()
   ) as ExtensionNodeMap;
   data = filterBlacklistedUrls(data);
   const custom_nodes = await getCustomNodesMap();
   const missingNodes: Set<string> = new Set();
-  const conflictNodeMap: Record<string, string[]> = {};
+  const conflictNodeMap: Record<string, any> = {};
 
   const crossCheckedApi = workflow_json.nodes
     .map((value: NodeType) => {
@@ -225,11 +225,11 @@ export async function computeCustomNodesMapJson({
       // Collect all matches for the classType
       const classTypeMatches = classType
         ? Object.entries(data).filter(
-            ([_, nodeArray]) =>
-              nodeArray[0].includes(classType) ||
-              (nodeArray[1].nodename_pattern &&
-                new RegExp(nodeArray[1].nodename_pattern).test(classType))
-          )
+          ([_, nodeArray]) =>
+            nodeArray[0].includes(classType) ||
+            (nodeArray[1].nodename_pattern &&
+              new RegExp(nodeArray[1].nodename_pattern).test(classType))
+        )
         : [];
 
       // Detect conflict: more than one match found
@@ -239,7 +239,7 @@ export async function computeCustomNodesMapJson({
           `Conflict detected for classType '${classType}' in node pack '${classTypeMatches.reduce(
             (acc, curr, index, array) =>
               acc +
-              curr[1][1].title_aux + 
+              curr[1][1].title_aux +
               (index < array.length - 1 ? ", " : ""),
             ""
           )}': multiple matches found.`
@@ -250,10 +250,15 @@ export async function computeCustomNodesMapJson({
       const classTypeData =
         classTypeMatches.length == 1 ? classTypeMatches[0] : undefined;
 
+      // Add to missing and conflict nodes
       if (!classTypeData && classType) {
         missingNodes.add(classType);
-        conflictNodeMap[classType] = classTypeMatches.map(([url, _]) => url);
+        const urls = classTypeMatches.map(([url, _]) => ({ url }));
+        conflictNodeMap[classType] = custom_nodes.custom_nodes.filter((x) => {
+          return urls.some((item: any) => x.files.includes(item.url));
+        });
       }
+
       return classTypeData ? { node: value, classTypeData } : null;
     })
     .filter((item) => item !== null);
@@ -322,7 +327,7 @@ export async function computeCustomNodesMapJson({
       class_type: node.type,
       inputs: {}
     });
-      return acc;
+    return acc;
   }, Promise.resolve({} as CustomNodesDeps));
 
   console.log("Missing nodes", missingNodes);
