@@ -256,7 +256,17 @@ export async function computeCustomNodesMapJson({
         const urls = classTypeMatches.map(([url, _]) => ({ url }));
         conflictNodeMap[classType] = custom_nodes.custom_nodes.filter((x) => {
           return urls.some((item: any) => x.files.includes(item.url));
-        });
+        })
+        conflictNodeMap[classType] = conflictNodeMap[classType].map((node: any) => {
+          return {
+            url: node.reference,
+            name: node.title,
+            files: node.files,
+            install_type: node.install_type,
+            ...(node.pip && { pip: node.pip }),
+            hash: null
+          };
+        })
       }
 
       return classTypeData ? { node: value, classTypeData } : null;
